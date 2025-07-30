@@ -1,10 +1,10 @@
 {
-    "1": {
-        "done": true,
-        "description": "A completed task."
-    },
-    "2": {
-        "done": false,
-        "description": "A non-completed task."
-    },
+  "1": {
+    "done": true,
+    "description": "A completed task."
+  },
+  "2": {
+    "done": false,
+    "description": "A non-completed task."
+  }
 }

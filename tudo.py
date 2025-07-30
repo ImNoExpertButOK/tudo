@@ -58,17 +58,19 @@ def load_tasks():
 
 
 def list_tasks(tasks: dict, short: bool):
+    result = ""
     if short:
         for id, content in tasks.items():
             if not content["done"]:
-                print(f"{id}. [ ] {content['description']}")
+                result = result + f"{id}.\t[ ] {content['description']} \n"
     else:
         for id, content in tasks.items():
             if not content["done"]:
-                print(f"{id}. [ ] {content['description']}")
+                result = result + f"{id}.\t[ ] {content['description']}\n"
             if content["done"]:
-                print(f"{id}. [x] {content['description']}")
+                result = result + f"{id}.\t[x] {content['description']}\n"
 
+    return result
 
 def get_current_task_index(tasks: dict):
     return int(max(set(tasks.keys())))
@@ -97,8 +99,8 @@ def mark_completed(tasks: dict, id: int):
 
 def trim(tasks: dict):
     count = 1
+
     
-        
     
 def export_markdown(tasks):
     pass
@@ -109,11 +111,11 @@ def main():
     tasks = load_tasks()
 
     if len(sys.argv) <= 1:        
-        list_tasks(tasks, short=True)
+        print(list_tasks(tasks, short=True))
         sys.exit(1)
 
     if args.list is None:
-        list_tasks(tasks, short=False)
+        print(list_tasks(tasks, short=False))
 
     if args.check:
         for index in args.check:
