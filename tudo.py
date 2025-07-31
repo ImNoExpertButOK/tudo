@@ -36,6 +36,8 @@ parser.add_argument("--check",
                     nargs="*")
 
 parser.add_argument("--trim",
+                    "-t",
+                    nargs="?",
                     help="Remove all done tasks from database.")
 
 
@@ -98,8 +100,13 @@ def mark_completed(tasks: dict, id: int):
 
 
 def trim(tasks: dict):
-    count = 1
-
+    new_task_list = {}
+    new_id = 1
+    for id, value in tasks.items():
+        if not tasks[id]["done"]:
+            new_task_list[new_id] = tasks[id]
+            new_id += 1
+    return new_task_list
     
     
 def export_markdown(tasks):
@@ -125,6 +132,10 @@ def main():
 
     if args.add:
         add_task(tasks, args.add)
+
+    if args.trim is None:
+        with open("tudo.json", "w", encoding="utf-8") as f:
+            json.dump(trim(tasks), f, indent=4)
 
     
 if __name__ == "__main__":
