@@ -3,15 +3,6 @@ import argparse
 import sys
 from pathlib import Path
 
-# TODO:
-# - Criar o repo para esse projeto.
-# - Pensar na arquitetura OOP.
-# - Caso não exista uma database, oferecer de criar uma.
-# - Ler SQLite externo.
-# - Ler YAML externo
-
-
-
 parser = argparse.ArgumentParser(
     description="Meu to-do"
 )
@@ -42,8 +33,7 @@ parser.add_argument("--trim",
 
 
 
-def load_tasks():
-        
+def load_tasks():  
     if Path("tudo.db").exists():
         print("Database existe em sqlite")
 
@@ -57,6 +47,15 @@ def load_tasks():
 
     else:
         confirmation = input("Nenhuma database foi encontrada. Criar uma nova? y/n ")
+
+
+def get_current_task_index(tasks: dict):
+    return int(max(set(tasks.keys())))
+
+
+def update_db(tasks: dict):
+    with open("tudo.json", "r", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4)
 
 
 def list_tasks(tasks: dict, short: bool):
@@ -73,18 +72,13 @@ def list_tasks(tasks: dict, short: bool):
                 result = result + f"{id}.\t[x] {content['description']}\n"
 
     return result
-
-def get_current_task_index(tasks: dict):
-    return int(max(set(tasks.keys())))
+    
                 
 def add_task(tasks: dict, content: list):
     description = " ".join(content)
     index = get_current_task_index(tasks) + 1
-
     tasks[str(index)] = {"done": False, "description": description}
-
-    with open("tudo.json", "w", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4)
+    update_db(tasks)
 
 
 def mark_completed(tasks: dict, id: int):
@@ -97,7 +91,7 @@ def mark_completed(tasks: dict, id: int):
             print(f"Tarefa de id {id} já foi completada")
     except KeyError:
         print(f"Tarefa de id {id} não existe.")
-
+        
 
 def trim(tasks: dict):
     new_task_list = {}
@@ -134,8 +128,7 @@ def main():
         add_task(tasks, args.add)
 
     if args.trim is None:
-        with open("tudo.json", "w", encoding="utf-8") as f:
-            json.dump(trim(tasks), f, indent=4)
+        update_db(trim(tasks))
 
     
 if __name__ == "__main__":
