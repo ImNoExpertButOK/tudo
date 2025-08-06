@@ -33,20 +33,23 @@ parser.add_argument("--trim",
 
 
 def update_db(tasks: dict):
+    '''Takes in a dict in the format of the dabase and writes it to
+    the external json file. It will overwrite it with the contents of
+    the dict.'''
     with open("tudo.json", "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4)
 
 
 def read_db():
+    '''Reads the json tasklist, loads it into a dict and returns it.'''
     with open("tudo.json", "r", encoding="utf-8") as f:
         result = json.load(f)
         return result
 
 def load_tasks():
-    '''
-    Looks in the current folder for a database. If not found,
-    offer the user the option to create a new one.
-    '''
+    '''Looks in the current folder for a database. If not found,
+    offer the user the option to create a new one. '''
+    
     if Path("tudo.json").exists():
         return read_db()
     else:
