@@ -37,24 +37,29 @@ def update_db(tasks: dict):
         json.dump(tasks, f, indent=4)
 
 
+def read_db():
+    with open("tudo.json", "r", encoding="utf-8") as f:
+        result = json.load(f)
+        return result
 
 def load_tasks():
     '''
     Looks in the current folder for a database. If not found,
-    it offers the user the option to create a new one.
+    offer the user the option to create a new one.
     '''
-       
     if Path("tudo.json").exists():
-        with open("tudo.json", "r", encoding="utf-8") as f:
-            result = json.load(f)
-        return result
+        return read_db()
     else:
-        confirmation = input("No database found. Do you wish to create a new one? y/n ")
-        # if confirmation == "y":
-        #     tasks = {}
-        #     tasks["1"] = {"done": False, "description": "This is a sample task."}
-        #     update_db(tasks)
-        #     print("New database created.")
+        answer = input("No database found. Do you wish to create a new one? y/n ")
+        if answer == "y":
+            tasks = {}
+            tasks["1"] = {"done": False, "description": "This is a sample task."}
+            update_db(tasks)
+            print("New database created.")
+            return read_db()
+        else:
+            print("No action performed")
+            sys.exit(1)
 
 
 def get_current_task_index(tasks: dict):
