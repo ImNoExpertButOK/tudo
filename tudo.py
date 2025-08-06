@@ -32,30 +32,33 @@ parser.add_argument("--trim",
                     help="Remove all done tasks from database.")
 
 
+def update_db(tasks: dict):
+    with open("tudo.json", "w", encoding="utf-8") as f:
+        json.dump(tasks, f, indent=4)
 
-def load_tasks():  
-    if Path("tudo.db").exists():
-        print("Database existe em sqlite")
 
-    elif Path("tudo.md").exists():
-        print("Database existe em markdown")
-        
-    elif Path("tudo.json").exists():
+
+def load_tasks():
+    '''
+    Looks in the current folder for a database. If not found,
+    it offers the user the option to create a new one.
+    '''
+       
+    if Path("tudo.json").exists():
         with open("tudo.json", "r", encoding="utf-8") as f:
             result = json.load(f)
         return result
-
     else:
-        confirmation = input("Nenhuma database foi encontrada. Criar uma nova? y/n ")
+        confirmation = input("No database found. Do you wish to create a new one? y/n ")
+        # if confirmation == "y":
+        #     tasks = {}
+        #     tasks["1"] = {"done": False, "description": "This is a sample task."}
+        #     update_db(tasks)
+        #     print("New database created.")
 
 
 def get_current_task_index(tasks: dict):
     return int(max(set(tasks.keys())))
-
-
-def update_db(tasks: dict):
-    with open("tudo.json", "r", encoding="utf-8") as f:
-        json.dump(tasks, f, indent=4)
 
 
 def list_tasks(tasks: dict, short: bool):
